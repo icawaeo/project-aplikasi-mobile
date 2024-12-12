@@ -1,16 +1,10 @@
-# mobile
+# Money Converter
+Aplikasi ini merupakan sebuah aplikasi konversi uang dengan api dari
 
-A new Flutter project.
+## Link Video
+[Hasil Presentasi Video](https://drive.google.com/drive/folders/1h1h-Aerp_tJ4qNAy3CDCxkq0-ZAam3XD?usp=sharing)
 
-## Getting Started
-
-This project is a starting point for a Flutter application.
-
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
-
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+## Anggota Kelompok
+1. Veronica Waeo - 220211060123
+2. Dita Daun - 220211060051
+3. Miracle Sumajow - 220211060171
