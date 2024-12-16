@@ -62,7 +62,7 @@ class MainPageState extends State<MainPage> {
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.schedule),
-            label: 'Historical Rates',
+            label: 'Latest Rates',
           ),
         ],
         currentIndex: _selectedIndex,
@@ -77,10 +77,72 @@ class HomePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Center(
-      child: Text(
-        'Welcome to Currency Converter App',
-        style: TextStyle(fontSize: 24),
+    return Scaffold(
+      body: Container(
+        decoration: const BoxDecoration(
+          gradient: LinearGradient(
+            colors: [Color.fromARGB(255, 245, 249, 245), Color(0xFF087F23)],
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+          ),
+        ),
+        child: Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              const Icon(
+                Icons.monetization_on,
+                color: Colors.white,
+                size: 100,
+              ),
+              const SizedBox(height: 20),
+              Text(
+                'Welcome to Currency Converter App',
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  fontSize: 24,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.white.withOpacity(0.9),
+                  shadows: [
+                    Shadow(
+                      color: Colors.black.withOpacity(0.3),
+                      offset: const Offset(2, 2),
+                      blurRadius: 4,
+                    ),
+                  ],
+                ),
+              ),
+              const SizedBox(height: 10),
+              const Text(
+                'Convert currencies seamlessly with up-to-date rates.',
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  fontSize: 16,
+                  color: Colors.white70,
+                ),
+              ),
+              const SizedBox(height: 30),
+              ElevatedButton.icon(
+                onPressed: () {
+                  // Navigate to currency converter page or other functionality
+                  Navigator.pushNamed(context, '/converter');
+                },
+                icon: const Icon(Icons.arrow_forward),
+                label: const Text('Get Started'),
+                style: ElevatedButton.styleFrom(
+                  padding: const EdgeInsets.symmetric(
+                      horizontal: 24.0, vertical: 12.0),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(30),
+                  ),
+                  backgroundColor: Colors.white,
+                  foregroundColor: const Color(0xFF087F23),
+                  textStyle: const TextStyle(fontSize: 18),
+                ),
+              ),
+            ],
+          ),
+        ),
       ),
     );
   }
@@ -136,57 +198,138 @@ class CurrencyConverterPageState extends State<CurrencyConverterPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.all(16.0),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          TextField(
-            keyboardType: TextInputType.number,
-            decoration: const InputDecoration(labelText: 'Amount'),
-            onChanged: (value) {
-              _amount = double.tryParse(value) ?? 0.0;
-            },
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('Currency Converter'),
+        centerTitle: true,
+        backgroundColor: const Color.fromARGB(255, 224, 236, 255),
+      ),
+      body: Container(
+        decoration: const BoxDecoration(
+          gradient: LinearGradient(
+            colors: [Color.fromARGB(255, 255, 255, 255), Color(0xFF087F23)],
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
           ),
-          DropdownButton<String>(
-            value: _fromCurrency,
-            items: ['USD', 'IDR', 'EUR', 'JPY', 'AUD']
-                .map((currency) => DropdownMenuItem(
-                      value: currency,
-                      child: Text(currency),
-                    ))
-                .toList(),
-            onChanged: (value) {
-              setState(() {
-                _fromCurrency = value!;
-              });
-            },
+        ),
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              const Text(
+                'Enter Amount:',
+                style: TextStyle(
+                  fontSize: 18,
+                  color: Colors.white,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              const SizedBox(height: 10),
+              TextField(
+                keyboardType: TextInputType.number,
+                decoration: InputDecoration(
+                  filled: true,
+                  fillColor: Colors.white,
+                  hintText: 'Amount',
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                ),
+                onChanged: (value) {
+                  _amount = double.tryParse(value) ?? 0.0;
+                },
+              ),
+              const SizedBox(height: 20),
+              Row(
+                children: [
+                  Expanded(
+                    child: Column(
+                      children: [
+                        const Text(
+                          'From Currency',
+                          style: TextStyle(color: Colors.white),
+                        ),
+                        DropdownButton<String>(
+                          value: _fromCurrency,
+                          dropdownColor: Colors.white,
+                          items: _currencySymbols.keys
+                              .map((currency) => DropdownMenuItem(
+                                    value: currency,
+                                    child: Text(currency),
+                                  ))
+                              .toList(),
+                          onChanged: (value) {
+                            setState(() {
+                              _fromCurrency = value!;
+                            });
+                          },
+                        ),
+                      ],
+                    ),
+                  ),
+                  const SizedBox(width: 20),
+                  Expanded(
+                    child: Column(
+                      children: [
+                        const Text(
+                          'To Currency',
+                          style: TextStyle(color: Colors.white),
+                        ),
+                        DropdownButton<String>(
+                          value: _toCurrency,
+                          dropdownColor: Colors.white,
+                          items: _currencySymbols.keys
+                              .map((currency) => DropdownMenuItem(
+                                    value: currency,
+                                    child: Text(currency),
+                                  ))
+                              .toList(),
+                          onChanged: (value) {
+                            setState(() {
+                              _toCurrency = value!;
+                            });
+                          },
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 20),
+              ElevatedButton(
+                onPressed: _convertCurrency,
+                style: ElevatedButton.styleFrom(
+                  padding: const EdgeInsets.symmetric(
+                      horizontal: 24.0, vertical: 12.0),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(30),
+                  ),
+                  backgroundColor: Colors.white,
+                  foregroundColor: const Color(0xFF087F23),
+                ),
+                child: const Text(
+                  'Convert',
+                  style: TextStyle(fontSize: 18),
+                ),
+              ),
+              const SizedBox(height: 30),
+              Center(
+                child: Text(
+                  _result == 0.0
+                      ? "Result: --"
+                      : 'Result: ${_currencySymbols[_toCurrency] ?? ""} ${_result.toStringAsFixed(2)}',
+                  style: const TextStyle(
+                    fontSize: 24,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.white,
+                  ),
+                ),
+              ),
+            ],
           ),
-          DropdownButton<String>(
-            value: _toCurrency,
-            items: ['USD', 'IDR', 'EUR', 'JPY', 'AUD']
-                .map((currency) => DropdownMenuItem(
-                      value: currency,
-                      child: Text(currency),
-                    ))
-                .toList(),
-            onChanged: (value) {
-              setState(() {
-                _toCurrency = value!;
-              });
-            },
-          ),
-          const SizedBox(height: 20),
-          ElevatedButton(
-            onPressed: _convertCurrency,
-            child: const Text('Convert'),
-          ),
-          const SizedBox(height: 20),
-          Text(
-            'Result: ${_currencySymbols[_toCurrency] ?? ""} $_result',
-            style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
-          ),
-        ],
+        ),
       ),
     );
   }
@@ -212,29 +355,91 @@ class LatestRatesPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Latest Rates')),
-      body: FutureBuilder<Map<String, dynamic>>(
-        future: fetchLatestRates(),
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return const Center(child: CircularProgressIndicator());
-          } else if (snapshot.hasError) {
-            return Center(child: Text('Error: ${snapshot.error}'));
-          } else {
-            final data = snapshot.data;
-            final rates = data?['rates'] as Map<String, dynamic>;
+      appBar: AppBar(
+        title: const Text('Latest Rates'),
+        centerTitle: true,
+        backgroundColor: const Color.fromARGB(255, 224, 236, 255),
+      ),
+      body: Container(
+        decoration: const BoxDecoration(
+          gradient: LinearGradient(
+            colors: [Color.fromARGB(255, 255, 255, 255), Color(0xFF087F23)],
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+          ),
+        ),
+        child: FutureBuilder<Map<String, dynamic>>(
+          future: fetchLatestRates(),
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return const Center(
+                child: CircularProgressIndicator(color: Colors.white),
+              );
+            } else if (snapshot.hasError) {
+              return Center(
+                child: Text(
+                  'Error: ${snapshot.error}',
+                  style: const TextStyle(
+                    fontSize: 18,
+                    color: Colors.white,
+                    fontWeight: FontWeight.bold,
+                  ),
+                  textAlign: TextAlign.center,
+                ),
+              );
+            } else {
+              final data = snapshot.data;
+              final rates = data?['rates'] as Map<String, dynamic>;
 
-            return ListView(
-              padding: const EdgeInsets.all(16.0),
-              children: rates.entries.map((entry) {
-                return ListTile(
-                  title: Text('${entry.key}'),
-                  subtitle: Text('${entry.value}'),
-                );
-              }).toList(),
-            );
-          }
-        },
+              return Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: Card(
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  elevation: 8,
+                  child: ListView(
+                    padding: const EdgeInsets.all(16.0),
+                    children: [
+                      const Text(
+                        'Latest Exchange Rates',
+                        style: TextStyle(
+                          fontSize: 22,
+                          fontWeight: FontWeight.bold,
+                          color: Color(0xFF087F23),
+                        ),
+                        textAlign: TextAlign.center,
+                      ),
+                      const Divider(),
+                      ...rates.entries.map((entry) {
+                        return ListTile(
+                          leading: CircleAvatar(
+                            backgroundColor: const Color(0xFF4CAF50),
+                            child: Text(
+                              entry.key.substring(0, 1),
+                              style: const TextStyle(
+                                color: Colors.white,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ),
+                          title: Text(
+                            entry.key,
+                            style: const TextStyle(fontWeight: FontWeight.bold),
+                          ),
+                          subtitle: Text(
+                            '${entry.value}',
+                            style: const TextStyle(fontSize: 16),
+                          ),
+                        );
+                      }).toList(),
+                    ],
+                  ),
+                ),
+              );
+            }
+          },
+        ),
       ),
     );
   }
