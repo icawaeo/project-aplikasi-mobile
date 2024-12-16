@@ -363,7 +363,7 @@ class LatestRatesPage extends StatelessWidget {
       body: Container(
         decoration: const BoxDecoration(
           gradient: LinearGradient(
-            colors: [Color.fromARGB(255, 255, 255, 255), Color(0xFF087F23)],
+            colors: [Color(0xFF4CAF50), Color(0xFF087F23)],
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
           ),
